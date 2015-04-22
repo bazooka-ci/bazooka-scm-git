@@ -29,7 +29,17 @@ if [ -e "/bazooka-key" ]; then
   chmod 0600 /bazooka-key
 fi
 
-git clone "$BZK_SCM_URL" --recursive /bazooka
+if [ -z "$UPDATE" ]; then
+  echo "performing a fresh checkout"
+  git clone "$BZK_SCM_URL" --recursive /bazooka
+else
+  echo "performing an update"
+  pushd /bazooka
+  git clean -fd
+  git fetch
+  popd
+fi
+
 pushd /bazooka
   git checkout "$BZK_SCM_REFERENCE"
   extract_meta
